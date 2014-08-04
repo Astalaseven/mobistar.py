@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*
 
+import json
 import requests
 import re
 
@@ -41,7 +42,25 @@ def auth(number, get_pin_callback=raw_input):
     ))
     response = _mobistar_request(query)
     assert '<result code="100">' in response.content 
-    return _mobistar_extract_message(response.content)   
+    return _mobistar_extract_message(response.content)
+
+def find_contact(contact, contact_file):
+    '''
+    Return phone number of contact found in json file,
+    else return contact.
+    '''
+    contacts = {}
+
+    try:
+        contacts += json.loads(open(contact_file).read())
+    except:
+        print('ERROR: "%s" could not be read.' % (contact_file))
+    
+    if contact in contacts:
+        return contacts[contact]
+    else:
+        print('ERROR: "%s" has not been found in contact file.' % (contact))
+        return contact
 
 def send_sms(token, message, recipient):
     assert re.match(r'^\+32\d{9}$', recipient)
@@ -61,10 +80,10 @@ if __name__ == "__main__":
     from sys import argv
 
     if len(argv) < 3:
-        print "USAGE: %s NUMBER MESSAGE..." % (argv[0])
+        print("USAGE: %s NUMBER MESSAGE..." % (argv[0]))
         exit()
 
-    token_file = ENV['HOME']+'/.mobistar_token'
+    token_file = ENV['HOME'] + '/.mobistar_token'
     try:
         token = open(token_file).read().strip()
     except:
@@ -73,8 +92,13 @@ if __name__ == "__main__":
         open(token_file, 'w').write(token)
 
     dest = argv[1]
+    if not '+' in dest and not dest.isdigit():
+        contact_file = ENV['HOME'] + '/.mobistar_contacts'
+        dest = find_contact(dest, contact_file)
+
     if dest[0] == '0':
         dest = '+32' + dest[1:]
     msg = " ".join(argv[2:])
+
     send_sms(token, msg, dest)
-    print "SMS sent"
+    print("SMS sent")
