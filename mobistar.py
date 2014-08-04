@@ -100,7 +100,5 @@ if __name__ == "__main__":
         dest = '+32' + dest[1:]
     msg = " ".join(argv[2:])
 
-    print(dest)
-
     send_sms(token, msg, dest)
     print("SMS sent")
