@@ -7,4 +7,4 @@ Inspired by http://business.mobistar.be/fr/professionnels/solutions-business/opt
 ## Dependencies
 
 * Python 2
-* requests (`pip install requests`)
+* requests (`pip install requests` or `pip install -r requirements.txt`)
