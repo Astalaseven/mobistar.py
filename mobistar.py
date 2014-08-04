@@ -83,13 +83,13 @@ if __name__ == "__main__":
         print("USAGE: %s NUMBER MESSAGE..." % (argv[0]))
         exit()
 
-    # token_file = ENV['HOME'] + '/.mobistar_token'
-    # try:
-    #     token = open(token_file).read().strip()
-    # except:
-    #     number = raw_input("Your phone number ? ")
-    #     token = auth(number, raw_input)
-    #     open(token_file, 'w').write(token)
+    token_file = ENV['HOME'] + '/.mobistar_token'
+    try:
+        token = open(token_file).read().strip()
+    except:
+        number = raw_input("Your phone number ? ")
+        token = auth(number, raw_input)
+        open(token_file, 'w').write(token)
 
     dest = argv[1]
     if not '+' in dest and not dest.isdigit():
@@ -102,5 +102,5 @@ if __name__ == "__main__":
 
     print(dest)
 
-    # send_sms(token, msg, dest)
-    # print("SMS sent")
+    send_sms(token, msg, dest)
+    print("SMS sent")
